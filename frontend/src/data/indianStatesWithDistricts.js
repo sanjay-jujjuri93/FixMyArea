@@ -1,0 +1,32 @@
+const indianStatesWithDistricts = {
+  "Andhra Pradesh": ["Anantapur", "Chittoor", "East Godavari", "Guntur"],
+  "Arunachal Pradesh": ["Tawang", "West Kameng", "East Siang", "Lower Dibang Valley"],
+  "Assam": ["Baksa", "Barpeta", "Darrang", "Dhemaji"],
+  "Bihar": ["Araria", "Aurangabad", "Banka", "Begusarai"],
+  "Chhattisgarh": ["Balod", "Bastar", "Bijapur", "Bilaspur"],
+  "Goa": ["North Goa", "South Goa"],
+  "Gujarat": ["Ahmedabad", "Amreli", "Anand", "Aravalli"],
+  "Haryana": ["Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad"],
+  "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamirpur", "Kangra"],
+  "Jharkhand": ["Bokaro", "Chatra", "Deoghar", "Dhanbad"],
+  "Karnataka": ["Bangalore Urban", "Belgaum", "Bellary", "Bidar"],
+  "Kerala": ["Alappuzha", "Ernakulam", "Idukki", "Kannur"],
+  "Madhya Pradesh": ["Bhopal", "Gwalior", "Indore", "Jabalpur"],
+  "Maharashtra": ["Ahmednagar", "Akola", "Amravati", "Aurangabad"],
+  "Manipur": ["Bishnupur", "Chandel", "Churachandpur", "Imphal East"],
+  "Meghalaya": ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills"],
+  "Mizoram": ["Aizawl", "Champhai", "Kolasib", "Lawngtlai"],
+  "Nagaland": ["Dimapur", "Kohima", "Longleng", "Mokokchung"],
+  "Odisha": ["Angul", "Balangir", "Balasore", "Bargarh"],
+  "Punjab": ["Amritsar", "Barnala", "Bathinda", "Faridkot"],
+  "Rajasthan": ["Ajmer", "Alwar", "Banswara", "Baran"],
+  "Sikkim": ["East Sikkim", "North Sikkim", "South Sikkim", "West Sikkim"],
+  "Tamil Nadu": ["Chennai", "Coimbatore", "Cuddalore", "Dharmapuri"],
+  "Telangana": ["Adilabad", "Bhadradri Kothagudem", "Khammam","Hyderabad", "Jagtial"],
+  "Tripura": ["Dhalai", "Gomati", "Khowai", "North Tripura"],
+  "Uttar Pradesh": ["Agra", "Aligarh", "Allahabad", "Ambedkar Nagar"],
+  "Uttarakhand": ["Almora", "Bageshwar", "Chamoli", "Dehradun"],
+  "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar"]
+};
+
+export default indianStatesWithDistricts;
