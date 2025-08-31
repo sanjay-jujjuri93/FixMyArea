@@ -20,19 +20,19 @@ const AdminDashboard = () => {
       const config = { headers: { 'x-auth-token': token } };
 
       // Get all complaints (admin)
-      const complaintsRes = await axios.get('http://localhost:5000/api/complaints', config);
+      const complaintsRes = await axios.get('https://fixmyarea-backend.onrender.com/api/complaints', config);
       setComplaints(complaintsRes.data);
 
       // Get all workers
-      const workersRes = await axios.get('http://localhost:5000/api/users/workers', config);
+      const workersRes = await axios.get('https://fixmyarea-backend.onrender.com/api/users/workers', config);
       setWorkers(workersRes.data);
 
       // Get workers grouped by village
-      const workersByVillageRes = await axios.get('http://localhost:5000/api/users/workers-by-village', config);
+      const workersByVillageRes = await axios.get('https://fixmyarea-backend.onrender.com/api/users/workers-by-village', config);
       setWorkersByVillage(workersByVillageRes.data);
 
       // Get complaints grouped by village
-      const complaintsByVillageRes = await axios.get('http://localhost:5000/api/complaints/by-village', config);
+      const complaintsByVillageRes = await axios.get('https://fixmyarea-backend.onrender.com/api/complaints/by-village', config);
       setComplaintsByVillage(complaintsByVillageRes.data);
 
     } catch (err) {
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/complaints/${complaintId}/assign`,
+        `https://fixmyarea-backend.onrender.com/api/complaints/${complaintId}/assign`,
         { workerId },
         { headers: { 'x-auth-token': token } }
       );
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/users/remove-worker/${workerId}`, {
+      await axios.delete(`https://fixmyarea-backend.onrender.com/api/users/remove-worker/${workerId}`, {
         headers: { 'x-auth-token': token },
         data: { removalKey }
       });

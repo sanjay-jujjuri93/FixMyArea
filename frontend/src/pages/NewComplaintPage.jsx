@@ -61,7 +61,7 @@ const NewComplaintPage = () => {
         return;
       }
 
-      await axios.post('http://localhost:5000/api/complaints', form, {
+      await axios.post('https://fixmyarea-backend.onrender.com/api/complaints', form, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-auth-token': token,

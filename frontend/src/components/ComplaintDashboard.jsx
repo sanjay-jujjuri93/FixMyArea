@@ -11,7 +11,7 @@ const ComplaintDashboard = () => {
   // Fetch all public complaints
   const fetchComplaints = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/complaints/public');
+      const response = await axios.get('https://fixmyarea-backend.onrender.com/api/complaints/public');
       setComplaints(response.data);
       setLoading(false);
     } catch (error) {
@@ -36,7 +36,7 @@ const ComplaintDashboard = () => {
       
       const config = { headers: { 'x-auth-token': token } };
       await axios.put(
-        `http://localhost:5000/api/complaints/${complaintId}/upvote`,
+        `https://fixmyarea-backend.onrender.com/api/complaints/${complaintId}/upvote`,
         {},
         config
       );

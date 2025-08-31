@@ -19,7 +19,7 @@ const WorkerDashboard = () => {
   const fetchAssignedComplaints = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/complaints/assigned', {
+      const res = await axios.get('https://fixmyarea-backend.onrender.com/api/complaints/assigned', {
         headers: { 'x-auth-token': token }
       });
       setAssignedComplaints(res.data);
@@ -67,7 +67,7 @@ const WorkerDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/complaints/${currentComplaintId}/status`,
+        `https://fixmyarea-backend.onrender.com/api/complaints/${currentComplaintId}/status`,
         data,
         { headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' } }
       );
@@ -87,7 +87,7 @@ const WorkerDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/complaints/${complaintId}/status`,
+        `https://fixmyarea-backend.onrender.com/api/complaints/${complaintId}/status`,
         { status: 'In Progress' },
         { headers: { 'x-auth-token': token } }
       );

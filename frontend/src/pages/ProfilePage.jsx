@@ -10,7 +10,7 @@ const ProfilePage = () => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/users/me', {
+        const res = await axios.get('https://fixmyarea-backend.onrender.com/api/users/me', {
           headers: { 'x-auth-token': token }
         });
         setUser(res.data);

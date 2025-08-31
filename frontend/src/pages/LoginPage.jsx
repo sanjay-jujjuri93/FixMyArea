@@ -24,7 +24,7 @@ const LoginPage = ({ setUser }) => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const res = await axios.post('https://fixmyarea-backend.onrender.com/api/auth/login', {
         phone: formData.phone,
         password: formData.password,
         role, // ✅ Pass the role to backend
