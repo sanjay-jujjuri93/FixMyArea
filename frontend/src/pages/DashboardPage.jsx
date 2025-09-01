@@ -18,7 +18,7 @@ const DashboardPage = () => {
           return setError('Please log in to view your complaints.');
         }
 
-        const res = await axios.get('http://localhost:5000/api/complaints/me', {
+        const res = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/me', {
           headers: { 'x-auth-token': token }
         });
 

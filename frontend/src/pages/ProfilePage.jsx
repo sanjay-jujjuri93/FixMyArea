@@ -10,7 +10,7 @@ const ProfilePage = () => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('https://fixmyarea-backend.onrender.com/api/users/me', {
+        const res = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/users/me', {
           headers: { 'x-auth-token': token }
         });
         setUser(res.data);
@@ -29,18 +29,18 @@ const ProfilePage = () => {
   if (!user) return <div className="text-center mt-8 text-gray-600">No profile data found.</div>;
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">User Profile</h2>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">User Profile</h2>
         <div className="space-y-4 text-gray-700">
-          <p><strong>Name:</strong> {user.name}</p>
-          <p><strong>Phone:</strong> {user.phone}</p>
-          <p><strong>Role:</strong> {user.role}</p>
-          <p><strong>Date of Birth:</strong> {user.dob ? new Date(user.dob).toLocaleDateString() : 'N/A'}</p>
-          <p><strong>Gender:</strong> {user.gender || 'N/A'}</p>
-          <p><strong>State:</strong> {user.state || 'N/A'}</p>
-          <p><strong>District:</strong> {user.district || 'N/A'}</p>
-          <p><strong>Village:</strong> {user.village || 'N/A'}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>Name:</strong> {user.name}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>Phone:</strong> {user.phone}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>Role:</strong> {user.role}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>Date of Birth:</strong> {user.dob ? new Date(user.dob).toLocaleDateString() : 'N/A'}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>Gender:</strong> {user.gender || 'N/A'}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>State:</strong> {user.state || 'N/A'}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>District:</strong> {user.district || 'N/A'}</p>
+          <p className="border-b border-gray-100 pb-2"><strong>Village:</strong> {user.village || 'N/A'}</p>
           <p><strong>Pincode:</strong> {user.pincode || 'N/A'}</p>
         </div>
       </div>

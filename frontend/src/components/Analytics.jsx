@@ -10,7 +10,7 @@ const Analytics = () => {
     const fetchAnalytics = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/complaints/analytics/categories', {
+        const res = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/analytics/categories', {
           headers: { 'x-auth-token': token }
         });
         setCategoryData(res.data);

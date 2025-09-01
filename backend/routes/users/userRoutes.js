@@ -1,6 +1,7 @@
 // backend/routes/api/userRoutes.js
 
 const express = require('express');
+const bcrypt = require('bcryptjs'); // for password hashing
 const User = require('../../models/User');
 const auth = require('../../middleware/auth');
 const roleAuth = require('../../middleware/roleAuth');
@@ -8,71 +9,41 @@ const roleAuth = require('../../middleware/roleAuth');
 const router = express.Router();
 
 /**
- * @route   GET /api/users/workers
- * @desc    Get all users with the 'worker' role
- * @access  Private (Admin only)
+ * @route   POST /api/users/register
+ * @desc    Register a new user
+ * @access  Public
  */
-router.get('/workers', roleAuth(['admin']), async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
-    const workers = await User.find({ role: 'worker' }).select('-passwordHash -__v');
-    res.json(workers);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Server error' });
-  }
-});
+    const { fullName, phone, password, dob, gender, state, district, village, pincode } = req.body;
 
-/**
- * @route   GET /api/users/me
- * @desc    Get the details of the logged-in user
- * @access  Private (All authenticated users)
- */
-router.get('/me', auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select('-passwordHash -__v');
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+    // Check if user already exists
+    const existingUser = await User.findOne({ phone });
+    if (existingUser) {
+      return res.status(400).json({ msg: 'User already exists' });
     }
-    res.json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Server error' });
-  }
-});
 
-/**
- * @route   GET /api/users/workers-by-village
- * @desc    Get all workers grouped by their village
- * @access  Private (Admin only)
- */
-router.get('/workers-by-village', roleAuth(['admin']), async (req, res) => {
-  try {
-    const workersByVillage = await User.aggregate([
-      { $match: { role: 'worker' } }, // Only workers
-      {
-        $group: {
-          _id: "$village", // Group by village
-          workers: {
-            $push: {
-              _id: "$_id",
-              name: "$name",
-              phone: "$phone"
-            }
-          },
-          count: { $sum: 1 }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          village: "$_id",
-          workers: 1,
-          count: 1
-        }
-      },
-      { $sort: { village: 1 } } // Sort by village name
-    ]);
-    res.json(workersByVillage);
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    // Create user
+    const newUser = new User({
+      fullName,
+      phone,
+      passwordHash,
+      dob,
+      gender,
+      state,
+      district,
+      village,
+      pincode,
+      role: 'citizen' // default role
+    });
+
+    await newUser.save();
+
+    res.status(201).json({ msg: 'User registered successfully', user: { fullName, phone } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: 'Server error' });

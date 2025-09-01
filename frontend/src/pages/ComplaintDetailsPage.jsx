@@ -12,10 +12,10 @@ const ComplaintDetailsPage = () => {
   useEffect(() => {
     const fetchComplaintDetails = async () => {
       try {
-        const complaintRes = await axios.get(`http://localhost:5000/api/complaints/${id}`);
+        const complaintRes = await axios.get(`https://fixmyarea-backend-6enz.onrender.com/api/complaints/${id}`);
         setComplaint(complaintRes.data);
 
-        const updatesRes = await axios.get(`http://localhost:5000/api/complaints/worker-updates/${id}`);
+        const updatesRes = await axios.get(`https://fixmyarea-backend-6enz.onrender.com/api/complaints/worker-updates/${id}`);
         setUpdates(updatesRes.data);
       } catch (err) {
         console.error(err);

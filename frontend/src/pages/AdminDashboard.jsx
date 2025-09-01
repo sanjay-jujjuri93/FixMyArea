@@ -1,5 +1,3 @@
-// File: frontend/src/pages/AdminDashboard.jsx
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -13,26 +11,25 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Fetch complaints, workers, workersByVillage, complaintsByVillage
   const fetchAllData = async () => {
     try {
       const token = localStorage.getItem('token');
       const config = { headers: { 'x-auth-token': token } };
 
       // Get all complaints (admin)
-      const complaintsRes = await axios.get('https://fixmyarea-backend.onrender.com/api/complaints', config);
+      const complaintsRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints', config);
       setComplaints(complaintsRes.data);
 
       // Get all workers
-      const workersRes = await axios.get('https://fixmyarea-backend.onrender.com/api/users/workers', config);
+      const workersRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/users/workers', config);
       setWorkers(workersRes.data);
 
       // Get workers grouped by village
-      const workersByVillageRes = await axios.get('https://fixmyarea-backend.onrender.com/api/users/workers-by-village', config);
+      const workersByVillageRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/users/workers-by-village', config);
       setWorkersByVillage(workersByVillageRes.data);
 
       // Get complaints grouped by village
-      const complaintsByVillageRes = await axios.get('https://fixmyarea-backend.onrender.com/api/complaints/by-village', config);
+      const complaintsByVillageRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/by-village', config);
       setComplaintsByVillage(complaintsByVillageRes.data);
 
     } catch (err) {
@@ -47,13 +44,12 @@ const AdminDashboard = () => {
     fetchAllData();
   }, []);
 
-  // Assign complaint to worker
   const handleAssign = async (complaintId, workerId) => {
     if (!workerId) return;
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `https://fixmyarea-backend.onrender.com/api/complaints/${complaintId}/assign`,
+        `https://fixmyarea-backend-6enz.onrender.com/api/complaints/${complaintId}/assign`,
         { workerId },
         { headers: { 'x-auth-token': token } }
       );
@@ -65,14 +61,13 @@ const AdminDashboard = () => {
     }
   };
 
-  // Remove worker with secure key
   const handleRemoveWorker = async (workerId) => {
     const removalKey = prompt("Enter the secure removal key:");
     if (!removalKey) return;
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://fixmyarea-backend.onrender.com/api/users/remove-worker/${workerId}`, {
+      await axios.delete(`https://fixmyarea-backend-6enz.onrender.com/api/users/remove-worker/${workerId}`, {
         headers: { 'x-auth-token': token },
         data: { removalKey }
       });
@@ -92,7 +87,7 @@ const AdminDashboard = () => {
       <h2 className="text-3xl font-bold text-center text-gray-800 my-6">Admin Dashboard</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Left Column: Analytics + Workers by Village */}
         <div className="lg:col-span-1 space-y-6">
           <Analytics />
@@ -108,8 +103,8 @@ const AdminDashboard = () => {
                     </h4>
                     <ul className="pl-4 mt-2 space-y-1">
                       {group.workers.map(worker => (
-                        <li 
-                          key={worker._id} 
+                        <li
+                          key={worker._id}
                           className="text-gray-600 flex justify-between items-center"
                         >
                           {worker.name} ({worker.phone})
@@ -183,5 +178,4 @@ const AdminDashboard = () => {
     </div>
   );
 };
-
 export default AdminDashboard;

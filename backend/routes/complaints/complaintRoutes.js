@@ -174,21 +174,6 @@ router.get('/by-village', roleAuth(['admin']), async (req, res) => {
 });
 
 /**
- * @route   GET /api/complaints
- * @desc    Get all complaints (admin dashboard)
- * @access  Private (admin only)
- */
-router.get('/', roleAuth(['admin']), async (req, res) => {
-  try {
-    const complaints = await Complaint.find().populate('createdBy', 'name').populate('assignedTo', 'name');
-    res.json(complaints);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Server error' });
-  }
-});
-
-/**
  * @route   GET /api/complaints/:id
  * @desc    Get a single complaint by ID
  * @access  Public

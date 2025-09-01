@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const ComplaintDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -11,7 +12,7 @@ const ComplaintDashboard = () => {
   // Fetch all public complaints
   const fetchComplaints = async () => {
     try {
-      const response = await axios.get('https://fixmyarea-backend.onrender.com/api/complaints/public');
+      const response = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/public');
       setComplaints(response.data);
       setLoading(false);
     } catch (error) {
@@ -26,7 +27,10 @@ const ComplaintDashboard = () => {
   }, []);
 
   // Handle Upvote
-  const handleUpvote = async (complaintId) => {
+  const handleUpvote = async (e, complaintId) => {
+    e.stopPropagation(); // ✅ Stop event bubbling
+    e.preventDefault(); // ✅ Prevent page refresh
+
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -36,7 +40,7 @@ const ComplaintDashboard = () => {
       
       const config = { headers: { 'x-auth-token': token } };
       await axios.put(
-        `https://fixmyarea-backend.onrender.com/api/complaints/${complaintId}/upvote`,
+        `https://fixmyarea-backend-6enz.onrender.com/api/complaints/${complaintId}/upvote`,
         {},
         config
       );
@@ -68,13 +72,11 @@ const ComplaintDashboard = () => {
               className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200 flex flex-col justify-between h-full transform hover:-translate-y-1"
             >
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                  {complaint.title}
-                </h3>
+                <Link to={`/complaints/${complaint._id}`}>
+                  <h3 className="text-xl font-semibold hover:text-blue-600">{complaint.title}</h3>
+                </Link>
                 <p className="text-sm text-gray-500">Category: {complaint.category}</p>
                 <p className="text-gray-700 mt-2">{complaint.description}</p>
-
-                {/* Complaint image if available */}
                 {complaint.photoURL && (
                   <img
                     src={complaint.photoURL}
@@ -84,7 +86,6 @@ const ComplaintDashboard = () => {
                 )}
               </div>
 
-              {/* Status + Upvote section */}
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex justify-between items-center mb-4">
                   <span
@@ -104,7 +105,7 @@ const ComplaintDashboard = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => handleUpvote(complaint._id)}
+                    onClick={(e) => handleUpvote(e, complaint._id)}
                     className="flex-grow px-3 py-2 text-sm rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
                   >
                     Upvote

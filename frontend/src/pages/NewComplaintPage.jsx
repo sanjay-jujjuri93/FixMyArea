@@ -1,5 +1,3 @@
-// File: frontend/src/pages/NewComplaintPage.jsx
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +6,8 @@ const categories = [
   'Roads', 'Garbage', 'Streetlights', 'Water', 'Drainage', 'Stray Dogs', 'Safety'
 ];
 
-// ✅ Using OpenStreetMap Nominatim API (no API key required)
+// ✅ Replace with your own free OpenStreetMap Nominatim API URL
+// const GEOCODING_API_URL = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2';
 
 const NewComplaintPage = () => {
   const navigate = useNavigate();
@@ -27,7 +26,6 @@ const NewComplaintPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -36,7 +34,6 @@ const NewComplaintPage = () => {
     });
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -61,12 +58,16 @@ const NewComplaintPage = () => {
         return;
       }
 
-      await axios.post('https://fixmyarea-backend.onrender.com/api/complaints', form, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'x-auth-token': token,
-        },
-      });
+      await axios.post(
+        'https://fixmyarea-backend-6enz.onrender.com/api/complaints',
+        form,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'x-auth-token': token
+          }
+        }
+      );
 
       alert('Complaint submitted successfully!');
       navigate('/');
@@ -78,29 +79,22 @@ const NewComplaintPage = () => {
     }
   };
 
-  // Reverse geocoding with Nominatim
   const getAddressFromCoordinates = async (lat, lng) => {
     try {
-      const res = await axios.get(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-      );
-
+      // ✅ Using the OpenStreetMap Nominatim API
+      const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
+      
       if (res.data.address) {
         const address = res.data.display_name;
         const addressDetails = res.data.address;
 
-        setFormData((prevData) => ({
+        setFormData(prevData => ({
           ...prevData,
           address: address,
           state: addressDetails.state || '',
           district: addressDetails.county || addressDetails.city || '',
-          village:
-            addressDetails.village ||
-            addressDetails.suburb ||
-            addressDetails.city_district ||
-            '',
+          village: addressDetails.village || addressDetails.suburb || addressDetails.city_district || ''
         }));
-
         alert(`Location and Address set: ${address}`);
       } else {
         alert('Could not find an address for this location. Please enter it manually.');
@@ -111,17 +105,12 @@ const NewComplaintPage = () => {
     }
   };
 
-  // Get current device location
   const getCurrentLocation = () => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setFormData((prevData) => ({
-            ...prevData,
-            lat: latitude,
-            lng: longitude,
-          }));
+          setFormData(prevData => ({ ...prevData, lat: latitude, lng: longitude }));
           getAddressFromCoordinates(latitude, longitude);
         },
         (err) => {
@@ -148,73 +137,55 @@ const NewComplaintPage = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title */}
           <div>
-            <label className="block text-gray-600 text-sm font-medium">
-              Title
-            </label>
+            <label className="block text-gray-600 text-sm font-medium">Title</label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
               required
             />
           </div>
-
-          {/* Description */}
           <div>
-            <label className="block text-gray-600 text-sm font-medium">
-              Description
-            </label>
+            <label className="block text-gray-600 text-sm font-medium">Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows="4"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
               required
             ></textarea>
           </div>
-
-          {/* Category */}
           <div>
-            <label className="block text-gray-600 text-sm font-medium">
-              Category
-            </label>
+            <label className="block text-gray-600 text-sm font-medium">Category</label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
               required
             >
               <option value="">Select a Category</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
+                <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
           </div>
-
-          {/* Photo */}
           <div>
-            <label className="block text-gray-600 text-sm font-medium">
-              Photo
-            </label>
+            <label className="block text-gray-600 text-sm font-medium">Photo</label>
             <input
               type="file"
               name="photo"
               accept="image/*"
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
               required
             />
           </div>
 
-          {/* Location */}
           <div className="flex items-center justify-between space-x-4">
             <button
               type="button"
@@ -225,70 +196,58 @@ const NewComplaintPage = () => {
             </button>
             <div className="flex-grow">
               {formData.address && (
-                <span className="text-sm text-gray-600">
-                  Address: {formData.address}
-                </span>
+                <span className="text-sm text-gray-600">Address: {formData.address}</span>
               )}
             </div>
           </div>
-
-          {/* Address Details */}
+          
           <div className="space-y-2 pt-4 border-t border-gray-200">
-            <div>
-              <label className="block text-gray-600 text-sm font-medium">
-                State
-              </label>
-              <input
-                type="text"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
-                readOnly
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 text-sm font-medium">
-                District
-              </label>
-              <input
-                type="text"
-                name="district"
-                value={formData.district}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
-                readOnly
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 text-sm font-medium">
-                Village / Locality
-              </label>
-              <input
-                type="text"
-                name="village"
-                value={formData.village}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
-                readOnly
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 text-sm font-medium">
-                Full Address
-              </label>
-              <textarea
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                rows="2"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
-                required
-              ></textarea>
-            </div>
+             <div>
+                <label className="block text-gray-600 text-sm font-medium">State</label>
+                <input
+                  type="text"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 text-sm font-medium">District</label>
+                <input
+                  type="text"
+                  name="district"
+                  value={formData.district}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 text-sm font-medium">Village / Locality</label>
+                <input
+                  type="text"
+                  name="village"
+                  value={formData.village}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 text-sm font-medium">Full Address</label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  rows="2"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors mt-1"
+                  required
+                ></textarea>
+              </div>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="w-full px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-md disabled:bg-gray-400"
@@ -301,5 +260,4 @@ const NewComplaintPage = () => {
     </div>
   );
 };
-
 export default NewComplaintPage;
