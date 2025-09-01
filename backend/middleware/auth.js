@@ -9,9 +9,25 @@ module.exports = function (req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
+    
+    // Handle both JWT payload structures
+    if (decoded.user) {
+      req.user = decoded.user;
+    } else if (decoded.id) {
+      // If JWT payload has direct user properties
+      req.user = {
+        id: decoded.id,
+        role: decoded.role,
+        name: decoded.name
+      };
+    } else {
+      return res.status(401).json({ msg: 'Invalid token structure' });
+    }
+    
+    console.log('Auth middleware - req.user set to:', req.user);
     next();
   } catch (err) {
+    console.error('Auth middleware error:', err);
     res.status(401).json({ msg: 'Token is not valid' });
   }
 };

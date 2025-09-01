@@ -54,20 +54,20 @@ const WorkerDashboard = () => {
       alert('Please provide a message and a photo.');
       return;
     }
-
+    
     const data = new FormData();
     data.append('status', 'Resolved');
     data.append('updateText', updateText);
     data.append('photo', photo);
-
+    
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `${BASE_URL}/api/complaints/${currentComplaintId}/status`,
+        `${BASE_URL}/api/complaints/${currentComplaintId}/status`, 
         data,
         { headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' } }
       );
-
+      
       fetchAssignedComplaints();
       alert('Task status updated successfully!');
       setShowResolveForm(false);
@@ -100,7 +100,7 @@ const WorkerDashboard = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-3xl font-bold text-center text-gray-800 my-6">Your Assigned Tasks</h2>
-
+      
       {showResolveForm && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
           <div className="relative bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">

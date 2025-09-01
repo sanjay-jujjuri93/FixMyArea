@@ -10,32 +10,20 @@ const fs = require('fs');
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-/**
- * @route   POST /api/complaints
- * @desc    Create a new complaint
- * @access  Private (citizen only)
- */
 router.post('/', auth, upload.single('photo'), async (req, res) => {
   try {
-    const { title, description, category, lat, lng, address } = req.body;
-
+    const { title, description, category, lat, lng, address, state, district, village } = req.body;
     if (!req.file) {
       return res.status(400).json({ msg: 'No photo uploaded' });
     }
-
     const result = await cloudinary.uploader.upload(req.file.path);
     fs.unlinkSync(req.file.path);
-
     const newComplaint = new Complaint({
-      title,
-      description,
-      category,
-      photoURL: result.secure_url,
+      title, description, category, photoURL: result.secure_url,
       location: { lat, lng },
-      address,
-      createdBy: req.user.id,
+      address, state, district, village,
+      createdBy: req.user.id
     });
-
     await newComplaint.save();
     res.status(201).json(newComplaint);
   } catch (err) {
@@ -44,11 +32,6 @@ router.post('/', auth, upload.single('photo'), async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/public
- * @desc    Get all complaints for public viewing
- * @access  Public
- */
 router.get('/public', async (req, res) => {
   try {
     const complaints = await Complaint.find().populate('createdBy', 'name');
@@ -59,11 +42,6 @@ router.get('/public', async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/counts
- * @desc    Get counts of solved and pending complaints
- * @access  Public
- */
 router.get('/counts', async (req, res) => {
   try {
     const solvedCount = await Complaint.countDocuments({ status: 'Resolved' });
@@ -75,11 +53,6 @@ router.get('/counts', async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/me
- * @desc    Get complaints created by the logged-in citizen
- * @access  Private
- */
 router.get('/me', auth, async (req, res) => {
   try {
     const complaints = await Complaint.find({ createdBy: req.user.id }).populate('createdBy', 'name');
@@ -90,11 +63,6 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/assigned
- * @desc    Get complaints assigned to logged-in worker
- * @access  Private (worker only)
- */
 router.get('/assigned', roleAuth(['worker']), async (req, res) => {
   try {
     const complaints = await Complaint.find({ assignedTo: req.user.id }).populate('createdBy', 'name').populate('assignedTo', 'name');
@@ -105,11 +73,6 @@ router.get('/assigned', roleAuth(['worker']), async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/analytics/categories
- * @desc    Get complaint counts by category (admin only)
- * @access  Private
- */
 router.get('/analytics/categories', roleAuth(['admin']), async (req, res) => {
   try {
     const categoryCounts = await Complaint.aggregate([{ $group: { _id: '$category', count: { $sum: 1 } } }]);
@@ -120,11 +83,6 @@ router.get('/analytics/categories', roleAuth(['admin']), async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/worker-updates/:complaintId
- * @desc    Get all worker updates for a specific complaint
- * @access  Public
- */
 router.get('/worker-updates/:complaintId', async (req, res) => {
   try {
     const updates = await WorkerUpdate.find({ complaintId: req.params.complaintId })
@@ -137,11 +95,6 @@ router.get('/worker-updates/:complaintId', async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/by-village
- * @desc    Get all complaints grouped by village
- * @access  Private (Admin only)
- */
 router.get('/by-village', roleAuth(['admin']), async (req, res) => {
   try {
     const complaintsByVillage = await Complaint.aggregate([
@@ -173,11 +126,6 @@ router.get('/by-village', roleAuth(['admin']), async (req, res) => {
   }
 });
 
-/**
- * @route   GET /api/complaints/:id
- * @desc    Get a single complaint by ID
- * @access  Public
- */
 router.get('/:id', async (req, res) => {
   try {
     const complaint = await Complaint.findById(req.params.id)
@@ -191,11 +139,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/**
- * @route   PUT /api/complaints/:id/assign
- * @desc    Assign a complaint to a worker
- * @access  Private (admin only)
- */
 router.put('/:id/assign', roleAuth(['admin']), async (req, res) => {
   try {
     const { workerId } = req.body;
@@ -216,11 +159,6 @@ router.put('/:id/assign', roleAuth(['admin']), async (req, res) => {
   }
 });
 
-/**
- * @route   PUT /api/complaints/:id/status
- * @desc    Update complaint status and add worker update with optional proof photo
- * @access  Private (worker only)
- */
 router.put('/:id/status', roleAuth(['worker']), upload.single('photo'), async (req, res) => {
   try {
     const { status, updateText } = req.body;
@@ -256,11 +194,6 @@ router.put('/:id/status', roleAuth(['worker']), upload.single('photo'), async (r
   }
 });
 
-/**
- * @route   PUT /api/complaints/:id/upvote
- * @desc    Upvote a complaint (citizen only)
- * @access  Private
- */
 router.put('/:id/upvote', auth, async (req, res) => {
   try {
     const complaint = await Complaint.findById(req.params.id);
@@ -278,6 +211,5 @@ router.put('/:id/upvote', auth, async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
-
 
 module.exports = router;

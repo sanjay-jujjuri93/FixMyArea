@@ -6,8 +6,7 @@ const categories = [
   'Roads', 'Garbage', 'Streetlights', 'Water', 'Drainage', 'Stray Dogs', 'Safety'
 ];
 
-// ✅ Replace with your own free OpenStreetMap Nominatim API URL
-// const GEOCODING_API_URL = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2';
+const GEOCODING_API_KEY = 'YOUR_GEOCODING_API_KEY';
 
 const NewComplaintPage = () => {
   const navigate = useNavigate();
@@ -81,7 +80,6 @@ const NewComplaintPage = () => {
 
   const getAddressFromCoordinates = async (lat, lng) => {
     try {
-      // ✅ Using the OpenStreetMap Nominatim API
       const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
       
       if (res.data.address) {
@@ -106,7 +104,7 @@ const NewComplaintPage = () => {
   };
 
   const getCurrentLocation = () => {
-    if ('geolocation' in navigator) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;

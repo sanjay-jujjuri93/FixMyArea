@@ -1,48 +1,45 @@
-// File: frontend/src/pages/ContactPage.jsx
-
 import React from 'react';
 
-const ContactPage = () => {
+const AboutPage = () => {
+  const teamMembers = [
+    "JUJJURI SANJAY",
+    "DORA TEJA",
+    "KARTHIK",
+    "DURGA PRASAD",
+    "MADHAN",
+    "NEELIMA REDDY"
+  ];
+
   return (
     <div className="container mx-auto p-8 max-w-4xl">
-      <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Contact Us</h2>
+      <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">About FixMyArea</h2>
       
-      <div className="bg-white p-6 rounded-xl shadow-lg text-center border border-gray-200">
-        <p className="text-gray-600 mb-6">
-          Have a question or feedback? We'd love to hear from you.
+      <div className="bg-white p-6 rounded-xl shadow-lg mb-6 border border-gray-200">
+        <h3 className="text-2xl font-semibold text-gray-700 mb-4">Our Mission</h3>
+        <p className="text-gray-600 leading-relaxed">
+          FixMyArea is a community-driven platform designed to empower citizens to report and resolve civic issues in their local areas. From potholes to broken streetlights, our mission is to create a seamless connection between citizens and local authorities. By providing an easy-to-use interface, we aim to make our communities safer, cleaner, and more efficient.
         </p>
-        
-        <div className="space-y-6">
-          {/* Email Section */}
-          <div>
-            <h4 className="font-semibold text-xl text-gray-700 mb-1">Email Address</h4>
-            <p className="text-blue-500 hover:underline">
-              <a href="mailto:sanjayjujjuri9@gmail.com">sanjayjujjuri9@gmail.com</a>
-            </p>
-          </div>
-          
-          {/* Phone Section */}
-          <div>
-            <h4 className="font-semibold text-xl text-gray-700 mb-1">Phone Number</h4>
-            <p className="text-gray-600">+91 9985434455</p>
-          </div>
-          
-          {/* Social Media Section */}
-          <div>
-            <h4 className="font-semibold text-xl text-gray-700 mb-2">Follow Us</h4>
-            <div className="flex justify-center space-x-6">
-              <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
-                <i className="fab fa-twitter mr-2"></i>Twitter
-              </a>
-              <a href="#" className="text-blue-800 hover:text-blue-900 font-medium">
-                <i className="fab fa-facebook mr-2"></i>Facebook
-              </a>
-            </div>
-          </div>
-        </div>
+      </div>
+      
+      <div className="bg-white p-6 rounded-xl shadow-lg mb-6 border border-gray-200">
+        <h3 className="text-2xl font-semibold text-gray-700 mb-4">Our Team</h3>
+        <ul className="list-disc list-inside text-gray-600 space-y-2">
+          {teamMembers.map((member, index) => (
+            <li key={index}>{member}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <h3 className="text-2xl font-semibold text-gray-700 mb-4">How It Works</h3>
+        <ul className="list-disc list-inside text-gray-600 space-y-2">
+          <li>Citizens can easily report issues by uploading a photo and location.</li>
+          <li>Complaints are categorized for quick identification and management.</li>
+          <li>Municipal officers (Admins) can assign these tasks to field workers.</li>
+          <li>Field workers update the status and upload proof photos once the issue is resolved.</li>
+        </ul>
       </div>
     </div>
   );
 };
-
-export default ContactPage;
+export default AboutPage;

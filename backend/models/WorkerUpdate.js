@@ -11,22 +11,14 @@ const workerUpdateSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  updateText: { 
-    type: String, 
-    required: true 
-  },
-  photoURL: { 
-    type: String // ✅ Field to store URL of the proof photo
-  },
+  updateText: { type: String, required: true },
+  photoURL: { type: String },
   status: {
     type: String,
     enum: ['In Progress', 'Resolved'],
     required: true
   },
-  timestamp: { 
-    type: Date, 
-    default: Date.now 
-  }
+  timestamp: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('WorkerUpdate', workerUpdateSchema);

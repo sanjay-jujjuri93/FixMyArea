@@ -60,7 +60,6 @@ const ComplaintDetailsPage = () => {
                     <span className="text-sm text-gray-500">{new Date(update.timestamp).toLocaleDateString()}</span>
                   </div>
                   <p className="text-gray-700">{update.updateText}</p>
-                  {/* ✅ Conditionally render the proof photo */}
                   {update.photoURL && (
                     <div className="mt-4">
                       <img src={update.photoURL} alt="Proof of work" className="w-48 h-auto rounded-md shadow" />
@@ -79,5 +78,4 @@ const ComplaintDetailsPage = () => {
     </div>
   );
 };
-
 export default ComplaintDetailsPage;

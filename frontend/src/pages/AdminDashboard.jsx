@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Analytics from '../components/Analytics';
 
+const BASE_URL = 'https://fixmyarea-backend-6enz.onrender.com';
+
 const AdminDashboard = () => {
   const [complaints, setComplaints] = useState([]);
   const [workers, setWorkers] = useState([]);
@@ -16,20 +18,16 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('token');
       const config = { headers: { 'x-auth-token': token } };
 
-      // Get all complaints (admin)
-      const complaintsRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints', config);
+      const complaintsRes = await axios.get(`${BASE_URL}/api/complaints`, config);
       setComplaints(complaintsRes.data);
-
-      // Get all workers
-      const workersRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/users/workers', config);
+      
+      const workersRes = await axios.get(`${BASE_URL}/api/users/workers`, config);
       setWorkers(workersRes.data);
 
-      // Get workers grouped by village
-      const workersByVillageRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/users/workers-by-village', config);
+      const workersByVillageRes = await axios.get(`${BASE_URL}/api/users/workers-by-village`, config);
       setWorkersByVillage(workersByVillageRes.data);
 
-      // Get complaints grouped by village
-      const complaintsByVillageRes = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/by-village', config);
+      const complaintsByVillageRes = await axios.get(`${BASE_URL}/api/complaints/by-village`, config);
       setComplaintsByVillage(complaintsByVillageRes.data);
 
     } catch (err) {
@@ -43,13 +41,13 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchAllData();
   }, []);
-
+  
   const handleAssign = async (complaintId, workerId) => {
     if (!workerId) return;
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `https://fixmyarea-backend-6enz.onrender.com/api/complaints/${complaintId}/assign`,
+        `${BASE_URL}/api/complaints/${complaintId}/assign`,
         { workerId },
         { headers: { 'x-auth-token': token } }
       );
@@ -60,14 +58,14 @@ const AdminDashboard = () => {
       alert('Failed to assign complaint.');
     }
   };
-
+  
   const handleRemoveWorker = async (workerId) => {
     const removalKey = prompt("Enter the secure removal key:");
     if (!removalKey) return;
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://fixmyarea-backend-6enz.onrender.com/api/users/remove-worker/${workerId}`, {
+      await axios.delete(`${BASE_URL}/api/users/remove-worker/${workerId}`, {
         headers: { 'x-auth-token': token },
         data: { removalKey }
       });
@@ -87,11 +85,8 @@ const AdminDashboard = () => {
       <h2 className="text-3xl font-bold text-center text-gray-800 my-6">Admin Dashboard</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        {/* Left Column: Analytics + Workers by Village */}
         <div className="lg:col-span-1 space-y-6">
           <Analytics />
-
           <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
             <h3 className="text-xl font-semibold mb-4">Workers by Village ({workers.length})</h3>
             <ul className="space-y-4">
@@ -103,8 +98,8 @@ const AdminDashboard = () => {
                     </h4>
                     <ul className="pl-4 mt-2 space-y-1">
                       {group.workers.map(worker => (
-                        <li
-                          key={worker._id}
+                        <li 
+                          key={worker._id} 
                           className="text-gray-600 flex justify-between items-center"
                         >
                           {worker.name} ({worker.phone})
@@ -126,7 +121,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Right Column: Complaints by Village */}
         <div className="lg:col-span-2">
           <h3 className="text-2xl font-bold text-gray-800 mb-6">All Complaints by Village</h3>
           {complaintsByVillage.length > 0 ? (
