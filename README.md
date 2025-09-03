@@ -87,3 +87,24 @@ This project is open-source and available under the MIT License.
 👉 Next Step: I can create this **README.md file inside your project automatically** so you just push it to GitHub.  
 
 Do you want me to generate this file for you?
+# FixMyArea – Crowdsourced Civic Issue Reporting and Resolution System
+
+FixMyArea is a full-stack web application that enables citizens to report civic issues such as potholes, garbage collection problems, and streetlight failures in their community. The platform ensures **transparency and accountability** by letting users track their complaints from submission to resolution.  
+
+### Key Features
+- 👤 **Citizen Role** – Register, log in, and submit complaints with images, descriptions, and location.  
+- 🛠️ **Admin Role** – Review complaints, assign them to workers, and monitor overall progress.  
+- 👷 **Worker Role** – Update complaint statuses until resolved.  
+- 📊 **Dashboard** – View real-time statistics of solved and pending complaints.  
+
+### Tech Stack
+- **Frontend:** React + Vite (deployed on Vercel)  
+- **Backend:** Node.js + Express (deployed on Render)  
+- **Database:** MongoDB Atlas  
+
+### Live Demo
+🔗 [FixMyArea App](https://fix-my-area-eta.vercel.app/)  
+
+---
+
+
