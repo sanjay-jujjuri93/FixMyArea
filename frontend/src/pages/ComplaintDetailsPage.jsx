@@ -12,10 +12,10 @@ const ComplaintDetailsPage = () => {
   useEffect(() => {
     const fetchComplaintDetails = async () => {
       try {
-        const complaintRes = await axios.get(`https://fixmyarea-backend-6enz.onrender.com/api/complaints/${id}`);
+        const complaintRes = await axios.get(`http://localhost:5000/api/complaints/${id}`);
         setComplaint(complaintRes.data);
 
-        const updatesRes = await axios.get(`https://fixmyarea-backend-6enz.onrender.com/api/complaints/worker-updates/${id}`);
+        const updatesRes = await axios.get(`http://localhost:5000/api/complaints/worker-updates/${id}`);
         setUpdates(updatesRes.data);
       } catch (err) {
         console.error(err);
@@ -60,6 +60,7 @@ const ComplaintDetailsPage = () => {
                     <span className="text-sm text-gray-500">{new Date(update.timestamp).toLocaleDateString()}</span>
                   </div>
                   <p className="text-gray-700">{update.updateText}</p>
+                  {/* ✅ Conditionally render the proof photo */}
                   {update.photoURL && (
                     <div className="mt-4">
                       <img src={update.photoURL} alt="Proof of work" className="w-48 h-auto rounded-md shadow" />
@@ -78,4 +79,5 @@ const ComplaintDetailsPage = () => {
     </div>
   );
 };
+
 export default ComplaintDetailsPage;

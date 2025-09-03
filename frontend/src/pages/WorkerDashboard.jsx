@@ -1,8 +1,8 @@
+// File: frontend/src/pages/WorkerDashboard.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-const BASE_URL = 'https://fixmyarea-backend-6enz.onrender.com';
 
 const WorkerDashboard = () => {
   const [assignedComplaints, setAssignedComplaints] = useState([]);
@@ -15,10 +15,11 @@ const WorkerDashboard = () => {
     photo: null,
   });
 
+  // Fetch complaints assigned to the worker
   const fetchAssignedComplaints = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`${BASE_URL}/api/complaints/assigned`, {
+      const res = await axios.get('http://localhost:5000/api/complaints/assigned', {
         headers: { 'x-auth-token': token }
       });
       setAssignedComplaints(res.data);
@@ -34,11 +35,13 @@ const WorkerDashboard = () => {
     fetchAssignedComplaints();
   }, []);
 
+  // Open resolve form modal
   const handleUpdateClick = (complaintId) => {
     setCurrentComplaintId(complaintId);
     setShowResolveForm(true);
   };
 
+  // Handle form changes
   const handleFormChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -47,6 +50,7 @@ const WorkerDashboard = () => {
     });
   };
 
+  // Submit "Resolved" form
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const { updateText, photo } = formData;
@@ -54,20 +58,20 @@ const WorkerDashboard = () => {
       alert('Please provide a message and a photo.');
       return;
     }
-    
+
     const data = new FormData();
     data.append('status', 'Resolved');
     data.append('updateText', updateText);
     data.append('photo', photo);
-    
+
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `${BASE_URL}/api/complaints/${currentComplaintId}/status`, 
+        `http://localhost:5000/api/complaints/${currentComplaintId}/status`,
         data,
         { headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' } }
       );
-      
+
       fetchAssignedComplaints();
       alert('Task status updated successfully!');
       setShowResolveForm(false);
@@ -78,11 +82,12 @@ const WorkerDashboard = () => {
     }
   };
 
+  // Start working on a complaint
   const handleStartWork = async (complaintId) => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `${BASE_URL}/api/complaints/${complaintId}/status`,
+        `http://localhost:5000/api/complaints/${complaintId}/status`,
         { status: 'In Progress' },
         { headers: { 'x-auth-token': token } }
       );
@@ -100,7 +105,8 @@ const WorkerDashboard = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-3xl font-bold text-center text-gray-800 my-6">Your Assigned Tasks</h2>
-      
+
+      {/* Resolve Form Modal */}
       {showResolveForm && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
           <div className="relative bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
@@ -148,17 +154,22 @@ const WorkerDashboard = () => {
         </div>
       )}
 
+      {/* Assigned Complaints List */}
       {assignedComplaints.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {assignedComplaints.map(complaint => (
-            <div key={complaint._id} className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200">
+          {assignedComplaints.map((complaint) => (
+            <div
+              key={complaint._id}
+              className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200"
+            >
               <Link to={`/complaints/${complaint._id}`}>
                 <h3 className="text-xl font-semibold hover:text-blue-600">{complaint.title}</h3>
               </Link>
-              <p className="text-sm text-gray-500">Status: {complaint.status}</p>
+              <p className="text-sm text-gray-500 mt-1">Status: {complaint.status}</p>
               <p className="text-sm text-gray-500">Address: {complaint.address}</p>
+
               <div className="mt-4 space-x-2">
-                  {complaint.status === 'In Progress' && (
+                {complaint.status === 'In Progress' && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -168,8 +179,8 @@ const WorkerDashboard = () => {
                   >
                     Mark as Resolved
                   </button>
-                  )}
-                  {complaint.status === 'Open' && (
+                )}
+                {complaint.status === 'Open' && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -179,7 +190,7 @@ const WorkerDashboard = () => {
                   >
                     Start Work
                   </button>
-                  )}
+                )}
               </div>
             </div>
           ))}
@@ -190,4 +201,5 @@ const WorkerDashboard = () => {
     </div>
   );
 };
+
 export default WorkerDashboard;

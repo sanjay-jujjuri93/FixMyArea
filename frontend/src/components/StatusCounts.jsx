@@ -9,7 +9,7 @@ const StatusCounts = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const response = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/counts');
+        const response = await axios.get('http://localhost:5000/api/complaints/counts');
         setCounts(response.data);
       } catch (err) {
         console.error("Error fetching counts:", err);

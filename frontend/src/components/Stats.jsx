@@ -1,3 +1,5 @@
+// File: frontend/src/components/Stats.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -8,7 +10,7 @@ const Stats = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const response = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/counts');
+        const response = await axios.get('http://localhost:5000/api/complaints/counts');
         setCounts(response.data);
       } catch (err) {
         console.error("Error fetching counts:", err);
@@ -19,22 +21,29 @@ const Stats = () => {
     fetchCounts();
   }, []);
 
-  if (loading) return <div className="text-center text-gray-600">Loading stats...</div>;
+  if (loading) {
+    return <div className="text-center text-gray-600">Loading stats...</div>;
+  }
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6">Impact Statistics</h3>
-      <div className="flex flex-col space-y-4">
-        <div className="flex justify-between items-center bg-green-50 p-4 rounded-lg">
-          <p className="text-lg font-medium text-green-700">Issues Solved</p>
-          <span className="text-4xl font-bold text-green-600">{counts.solved}</span>
-        </div>
-        <div className="flex justify-between items-center bg-red-50 p-4 rounded-lg">
-          <p className="text-lg font-medium text-red-700">Issues Pending</p>
-          <span className="text-4xl font-bold text-red-600">{counts.pending}</span>
-        </div>
+    <div className="flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-6 lg:space-x-12 my-12">
+      {/* Solved Issues */}
+      <div className="bg-white p-6 lg:p-8 rounded-xl shadow-lg border border-gray-200 text-center transform hover:scale-105 transition-transform duration-300">
+        <h3 className="text-5xl font-bold text-green-600 tracking-tight">
+          {counts.solved}
+        </h3>
+        <p className="text-lg text-gray-600 mt-2 font-medium">Issues Solved</p>
+      </div>
+
+      {/* Pending Issues */}
+      <div className="bg-white p-6 lg:p-8 rounded-xl shadow-lg border border-gray-200 text-center transform hover:scale-105 transition-transform duration-300">
+        <h3 className="text-5xl font-bold text-red-600 tracking-tight">
+          {counts.pending}
+        </h3>
+        <p className="text-lg text-gray-600 mt-2 font-medium">Issues Pending</p>
       </div>
     </div>
   );
 };
+
 export default Stats;

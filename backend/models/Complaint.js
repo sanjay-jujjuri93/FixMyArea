@@ -1,3 +1,5 @@
+// backend/models/Complaint.js
+
 const mongoose = require('mongoose');
 
 const complaintSchema = new mongoose.Schema({
@@ -13,10 +15,8 @@ const complaintSchema = new mongoose.Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true }
   },
+  // ✅ New field for storing the textual address
   address: { type: String, required: true },
-  state: { type: String, required: false },
-  district: { type: String, required: false },
-  village: { type: String, required: false },
   status: {
     type: String,
     enum: ['Open', 'In Progress', 'Resolved'],
@@ -31,6 +31,7 @@ const complaintSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  // Array to store users who upvoted the complaint to prevent duplicate votes
   upvotes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

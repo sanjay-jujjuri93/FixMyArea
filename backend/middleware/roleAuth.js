@@ -8,27 +8,37 @@ const jwt = require('jsonwebtoken');
 const roleAuth = (roles = []) => {
   return (req, res, next) => {
     try {
-      // Check if req.user exists (set by auth middleware)
-      if (!req.user) {
-        console.log('RoleAuth middleware - No req.user found');
-        return res.status(401).json({ success: false, msg: 'User not authenticated' });
+      // Get token from header
+      let token = req.header('x-auth-token');
+
+      // Also support Authorization: Bearer <token>
+      if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
       }
 
-      console.log('RoleAuth middleware - req.user:', req.user);
-      console.log('RoleAuth middleware - required roles:', roles);
-      console.log('RoleAuth middleware - user role:', req.user.role);
+      // If no token
+      if (!token) {
+        return res.status(401).json({ success: false, msg: 'No token, authorization denied' });
+      }
+
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      if (!decoded || !decoded.user) {
+        return res.status(401).json({ success: false, msg: 'Invalid token payload' });
+      }
+
+      req.user = decoded.user;
 
       // Check role
       if (roles.length > 0 && !roles.includes(req.user.role)) {
-        console.log('RoleAuth middleware - Access denied for role:', req.user.role);
         return res.status(403).json({ success: false, msg: 'Access denied: Insufficient privileges' });
       }
 
-      console.log('RoleAuth middleware - Access granted for role:', req.user.role);
       next();
     } catch (err) {
-      console.error('RoleAuth Middleware Error:', err.message);
-      res.status(500).json({ success: false, msg: 'Server error in role authorization' });
+      console.error('Auth Middleware Error:', err.message);
+      res.status(401).json({ success: false, msg: 'Token is not valid or expired' });
     }
   };
 };

@@ -1,9 +1,9 @@
+// File: frontend/src/pages/AdminDashboard.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Analytics from '../components/Analytics';
-
-const BASE_URL = 'https://fixmyarea-backend-6enz.onrender.com';
 
 const AdminDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -13,21 +13,26 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Fetch complaints, workers, workersByVillage, complaintsByVillage
   const fetchAllData = async () => {
     try {
       const token = localStorage.getItem('token');
       const config = { headers: { 'x-auth-token': token } };
 
-      const complaintsRes = await axios.get(`${BASE_URL}/api/complaints`, config);
+      // Get all complaints (admin)
+      const complaintsRes = await axios.get('http://localhost:5000/api/complaints', config);
       setComplaints(complaintsRes.data);
-      
-      const workersRes = await axios.get(`${BASE_URL}/api/users/workers`, config);
+
+      // Get all workers
+      const workersRes = await axios.get('http://localhost:5000/api/users/workers', config);
       setWorkers(workersRes.data);
 
-      const workersByVillageRes = await axios.get(`${BASE_URL}/api/users/workers-by-village`, config);
+      // Get workers grouped by village
+      const workersByVillageRes = await axios.get('http://localhost:5000/api/users/workers-by-village', config);
       setWorkersByVillage(workersByVillageRes.data);
 
-      const complaintsByVillageRes = await axios.get(`${BASE_URL}/api/complaints/by-village`, config);
+      // Get complaints grouped by village
+      const complaintsByVillageRes = await axios.get('http://localhost:5000/api/complaints/by-village', config);
       setComplaintsByVillage(complaintsByVillageRes.data);
 
     } catch (err) {
@@ -41,13 +46,14 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchAllData();
   }, []);
-  
+
+  // Assign complaint to worker
   const handleAssign = async (complaintId, workerId) => {
     if (!workerId) return;
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `${BASE_URL}/api/complaints/${complaintId}/assign`,
+        `http://localhost:5000/api/complaints/${complaintId}/assign`,
         { workerId },
         { headers: { 'x-auth-token': token } }
       );
@@ -58,14 +64,15 @@ const AdminDashboard = () => {
       alert('Failed to assign complaint.');
     }
   };
-  
+
+  // Remove worker with secure key
   const handleRemoveWorker = async (workerId) => {
     const removalKey = prompt("Enter the secure removal key:");
     if (!removalKey) return;
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${BASE_URL}/api/users/remove-worker/${workerId}`, {
+      await axios.delete(`http://localhost:5000/api/users/remove-worker/${workerId}`, {
         headers: { 'x-auth-token': token },
         data: { removalKey }
       });
@@ -83,10 +90,13 @@ const AdminDashboard = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-3xl font-bold text-center text-gray-800 my-6">Admin Dashboard</h2>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Left Column: Analytics + Workers by Village */}
         <div className="lg:col-span-1 space-y-6">
           <Analytics />
+
           <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
             <h3 className="text-xl font-semibold mb-4">Workers by Village ({workers.length})</h3>
             <ul className="space-y-4">
@@ -121,6 +131,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        {/* Right Column: Complaints by Village */}
         <div className="lg:col-span-2">
           <h3 className="text-2xl font-bold text-gray-800 mb-6">All Complaints by Village</h3>
           {complaintsByVillage.length > 0 ? (
@@ -172,4 +183,5 @@ const AdminDashboard = () => {
     </div>
   );
 };
+
 export default AdminDashboard;

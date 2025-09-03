@@ -1,3 +1,5 @@
+// frontend/src/pages/AboutPage.jsx
+
 import React from 'react';
 
 const AboutPage = () => {
@@ -14,6 +16,7 @@ const AboutPage = () => {
     <div className="container mx-auto p-8 max-w-4xl">
       <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">About FixMyArea</h2>
       
+      {/* Mission Section */}
       <div className="bg-white p-6 rounded-xl shadow-lg mb-6 border border-gray-200">
         <h3 className="text-2xl font-semibold text-gray-700 mb-4">Our Mission</h3>
         <p className="text-gray-600 leading-relaxed">
@@ -21,6 +24,7 @@ const AboutPage = () => {
         </p>
       </div>
       
+      {/* Team Section */}
       <div className="bg-white p-6 rounded-xl shadow-lg mb-6 border border-gray-200">
         <h3 className="text-2xl font-semibold text-gray-700 mb-4">Our Team</h3>
         <ul className="list-disc list-inside text-gray-600 space-y-2">
@@ -30,6 +34,7 @@ const AboutPage = () => {
         </ul>
       </div>
 
+      {/* How It Works Section */}
       <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
         <h3 className="text-2xl font-semibold text-gray-700 mb-4">How It Works</h3>
         <ul className="list-disc list-inside text-gray-600 space-y-2">
@@ -42,4 +47,5 @@ const AboutPage = () => {
     </div>
   );
 };
+
 export default AboutPage;
