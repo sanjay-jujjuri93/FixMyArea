@@ -14,9 +14,9 @@ const complaintSchema = new mongoose.Schema({
     lng: { type: Number, required: true }
   },
   address: { type: String, required: true },
-  state: { type: String, required: false },
-  district: { type: String, required: false },
-  village: { type: String, required: false },
+  state: { type: String },
+  district: { type: String },
+  village: { type: String },
   status: {
     type: String,
     enum: ['Open', 'In Progress', 'Resolved'],

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Navbar = ({ user, setUser }) => {
+const Navbar = ({ user, setUser, onSidebarToggle }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -18,37 +18,90 @@ const Navbar = ({ user, setUser }) => {
   };
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 p-4 flex justify-between items-center flex-wrap">
-      <div className="text-xl font-bold text-gray-800">FixMyArea</div>
+    <nav className="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50 p-4 flex justify-between items-center flex-wrap sticky top-0 z-30">
+      {/* Professional Hamburger Menu - Always visible */}
+      <div className="flex items-center space-x-4">
+        <button
+          onClick={onSidebarToggle}
+          className="group p-3 rounded-lg hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          aria-label="Toggle sidebar"
+        >
+          <div className="flex flex-col space-y-1.5">
+            <div className="w-6 h-0.5 bg-gray-700 rounded-full group-hover:bg-blue-600 transition-colors duration-200"></div>
+            <div className="w-6 h-0.5 bg-gray-700 rounded-full group-hover:bg-blue-600 transition-colors duration-200"></div>
+            <div className="w-6 h-0.5 bg-gray-700 rounded-full group-hover:bg-blue-600 transition-colors duration-200"></div>
+          </div>
+        </button>
+        
+        <div className="text-xl font-bold text-gray-800">FixMyArea</div>
+      </div>
 
-      <ul className="flex space-x-2 md:space-x-6 flex-wrap">
-        <li><Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors font-medium text-sm md:text-base">Home</Link></li>
-        <li><Link to="/about" className="text-gray-600 hover:text-blue-500 transition-colors font-medium text-sm md:text-base">About Us</Link></li>
-        <li><Link to="/contact" className="text-gray-600 hover:text-blue-500 transition-colors font-medium text-sm md:text-base">Contact Us</Link></li>
+      <ul className="flex space-x-2 md:space-x-6 flex-wrap hidden md:flex">
+        <li>
+          <Link
+            to="/"
+            className="text-gray-600 hover:text-blue-500 transition-colors font-medium text-sm md:text-base"
+          >
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/about"
+            className="text-gray-600 hover:text-blue-500 transition-colors font-medium text-sm md:text-base"
+          >
+            About Us
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/contact"
+            className="text-gray-600 hover:text-blue-500 transition-colors font-medium text-sm md:text-base"
+          >
+            Contact Us
+          </Link>
+        </li>
       </ul>
 
       {user ? (
         <div className="flex items-center space-x-2 md:space-x-4 flex-wrap">
-          <Link to="/new-complaint" className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-md text-sm">
+          <Link
+            to="/new-complaint"
+            className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-md text-sm"
+          >
             Report Issue
           </Link>
-          <Link to="/dashboard" className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-md text-sm">
+          <Link
+            to="/dashboard"
+            className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-md text-sm"
+          >
             Dashboard
           </Link>
-          
+
           <Link to="/profile" className="flex items-center">
             <div className="bg-blue-500 text-white rounded-full h-8 w-8 md:h-10 md:w-10 flex items-center justify-center font-bold text-sm md:text-lg cursor-pointer shadow-md">
               {getInitials(user?.name)}
             </div>
           </Link>
-          <button onClick={handleLogout} className="text-red-500 hover:text-red-700 font-medium text-sm">Logout</button>
+          <button
+            onClick={handleLogout}
+            className="text-red-500 hover:text-red-700 font-medium text-sm"
+          >
+            Logout
+          </button>
         </div>
       ) : (
         <div className="flex items-center space-x-2 md:space-x-4 flex-wrap">
-          <Link to="/auth-selection" className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-md text-sm">
+          <Link
+            to="/auth-selection"
+            className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-md text-sm"
+          >
             Login
           </Link>
-          <Link to="/register-selection" className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-gray-500 text-white font-semibold hover:bg-gray-600 transition-colors shadow-md text-sm">
+          <Link
+            to="/register-selection"
+            className="px-3 py-1 md:px-4 md:py-2 rounded-lg bg-gray-500 text-white font-semibold hover:bg-gray-600 transition-colors shadow-md text-sm"
+          >
             Register
           </Link>
         </div>
@@ -56,4 +109,5 @@ const Navbar = ({ user, setUser }) => {
     </nav>
   );
 };
+
 export default Navbar;

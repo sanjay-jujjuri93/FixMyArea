@@ -63,7 +63,7 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
-router.get('/assigned', roleAuth(['worker']), async (req, res) => {
+router.get('/assigned', auth, roleAuth(['worker']), async (req, res) => {
   try {
     const complaints = await Complaint.find({ assignedTo: req.user.id }).populate('createdBy', 'name').populate('assignedTo', 'name');
     res.json(complaints);
@@ -73,7 +73,7 @@ router.get('/assigned', roleAuth(['worker']), async (req, res) => {
   }
 });
 
-router.get('/analytics/categories', roleAuth(['admin']), async (req, res) => {
+router.get('/analytics/categories', auth, roleAuth(['admin']), async (req, res) => {
   try {
     const categoryCounts = await Complaint.aggregate([{ $group: { _id: '$category', count: { $sum: 1 } } }]);
     res.json(categoryCounts);
@@ -95,7 +95,7 @@ router.get('/worker-updates/:complaintId', async (req, res) => {
   }
 });
 
-router.get('/by-village', roleAuth(['admin']), async (req, res) => {
+router.get('/by-village', auth, roleAuth(['admin']), async (req, res) => {
   try {
     const complaintsByVillage = await Complaint.aggregate([
       {
@@ -126,20 +126,17 @@ router.get('/by-village', roleAuth(['admin']), async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/', auth, roleAuth(['admin']), async (req, res) => {
   try {
-    const complaint = await Complaint.findById(req.params.id)
-      .populate('createdBy', 'name')
-      .populate('assignedTo', 'name');
-    if (!complaint) return res.status(404).json({ msg: 'Complaint not found' });
-    res.json(complaint);
+    const complaints = await Complaint.find().populate('createdBy', 'name').populate('assignedTo', 'name');
+    res.json(complaints);
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: 'Server error' });
   }
 });
 
-router.put('/:id/assign', roleAuth(['admin']), async (req, res) => {
+router.put('/:id/assign', auth, roleAuth(['admin']), async (req, res) => {
   try {
     const { workerId } = req.body;
     const complaint = await Complaint.findByIdAndUpdate(
@@ -159,7 +156,7 @@ router.put('/:id/assign', roleAuth(['admin']), async (req, res) => {
   }
 });
 
-router.put('/:id/status', roleAuth(['worker']), upload.single('photo'), async (req, res) => {
+router.put('/:id/status', auth, roleAuth(['worker']), upload.single('photo'), async (req, res) => {
   try {
     const { status, updateText } = req.body;
     const complaint = await Complaint.findById(req.params.id);

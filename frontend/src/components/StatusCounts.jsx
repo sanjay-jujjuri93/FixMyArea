@@ -9,11 +9,18 @@ const StatusCounts = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
+        setLoading(true);
+        setError('');
+        
         const response = await axios.get('https://fixmyarea-backend-6enz.onrender.com/api/complaints/counts');
         setCounts(response.data);
       } catch (err) {
         console.error("Error fetching counts:", err);
-        setError('Failed to load counts.');
+        if (err.response?.status === 500) {
+          setError('Server error. Please try again later.');
+        } else {
+          setError('Failed to load counts. Please check your connection and try again.');
+        }
       } finally {
         setLoading(false);
       }
@@ -26,7 +33,17 @@ const StatusCounts = () => {
   }
 
   if (error) {
-    return <div className="text-center text-red-600">{error}</div>;
+    return (
+      <div className="text-center">
+        <div className="text-red-600 mb-4">{error}</div>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
